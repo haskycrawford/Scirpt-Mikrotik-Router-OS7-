@@ -1,0 +1,5 @@
+/system identity print
+/ip address print where interface=BR-LAN
+/ip route print where dst-address=0.0.0.0/0
+/system script print where name=wan-monitor
+/system scheduler print where name=wan-monitor-schedule
