@@ -24,6 +24,14 @@
 /ip firewall mangle add chain=prerouting in-interface=BR-LAN connection-state=new dst-address-type=!local nth=2,0 action=mark-routing new-routing-mark=to_ether1 passthrough=yes
 /ip firewall mangle add chain=prerouting in-interface=BR-LAN connection-state=new dst-address-type=!local nth=2,1 action=mark-routing new-routing-mark=to_ether2 passthrough=yes
 
+# Bloquear DNS na cadeia INPUT (tráfego destinado ao próprio roteador)
+/ip firewall filter add chain=input in-interface=WAN protocol=udp dst-port=53 action=drop
+/ip firewall filter add chain=input in-interface=WAN protocol=tcp dst-port=53 action=drop
+
+# Bloquear DNS na cadeia FORWARD (tráfego de passagem)
+/ip firewall filter add chain=forward in-interface=WAN protocol=udp dst-port=53 action=drop
+/ip firewall filter add chain=forward in-interface=WAN protocol=tcp dst-port=53 action=drop
+
 /ip route add dst-address=0.0.0.0/0 gateway=ether1 routing-mark=to_ether1 distance=1 check-gateway=ping
 /ip route add dst-address=0.0.0.0/0 gateway=ether2 routing-mark=to_ether2 distance=1 check-gateway=ping
 /ip route add dst-address=0.0.0.0/0 gateway=ether1,ether2 distance=1 check-gateway=ping
